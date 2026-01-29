@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
-import { AppState, AppAction, SessionState, TrainingMode, Attempt } from '@/types';
+import { AppState, AppAction, SessionState, Attempt } from '@/types';
 import { loadData, saveData, defaultState, generateId } from '@/utils/storage';
 import { updateProgress } from '@/utils/statistics';
 import { validateAnswer, parseClozeText } from '@/utils/clozeParser';

@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { Button, Card, ProgressBar, Tag } from './ui';
-import { parseClozeText, validateAnswer } from '@/utils/clozeParser';
+import { parseClozeText } from '@/utils/clozeParser';
 
 export function ResultScreen() {
     const navigate = useNavigate();
@@ -9,7 +9,7 @@ export function ResultScreen() {
     const { state, dispatch, getExercisesForSet } = useApp();
     const { session, attempts, exerciseSets } = state;
 
-    const currentSet = exerciseSets.find(s => s.id === setId);
+    // Find exercises for the set
     const exercises = getExercisesForSet(setId || '');
 
     // Get the most recent attempts for this session
@@ -126,7 +126,7 @@ export function ResultScreen() {
                                 <div className="space-y-3">
                                     <div className="flex items-center gap-2">
                                         <Tag variant="error" size="sm">
-                                            {attempt.correctAnswers.filter(c => c).length}/{attempt.correctAnswers.length} correct
+                                            {String(attempt.correctAnswers.filter(c => c).length)}/{String(attempt.correctAnswers.length)} correct
                                         </Tag>
                                     </div>
 

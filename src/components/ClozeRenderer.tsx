@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, KeyboardEvent } from 'react';
+import { useRef, useEffect, KeyboardEvent } from 'react';
 import { parseClozeText, calculateInputWidth } from '@/utils/clozeParser';
 
 interface ClozeRendererProps {
