@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { ClozeRenderer } from './ClozeRenderer';
+import { Timer } from './Timer';
 import { Button, Card, ProgressBar, Tag } from './ui';
+
+const TEST_MODE_DURATION_SECONDS = 5 * 60; // 5 minutes
 
 export function ExercisePlayer() {
     const navigate = useNavigate();
@@ -66,6 +69,14 @@ export function ExercisePlayer() {
         navigate('/');
     }, [dispatch, navigate]);
 
+    const handleTimerExpire = useCallback(() => {
+        if (!session) return;
+        // Auto-record attempt for current exercise
+        recordAttempt();
+        // Navigate to results
+        navigate(`/result/${session.currentSetId}`);
+    }, [session, recordAttempt, navigate]);
+
     // Keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -127,9 +138,17 @@ export function ExercisePlayer() {
                             </div>
                         </div>
                     </div>
-                    <Tag variant={exercise.difficulty === 'easy' ? 'success' : exercise.difficulty === 'hard' ? 'error' : 'warning'}>
-                        {exercise.difficulty === 'easy' ? 'Easy' : exercise.difficulty === 'hard' ? 'Hard' : 'Medium'}
-                    </Tag>
+                    <div className="flex items-center gap-3">
+                        {session.mode === 'test' && (
+                            <Timer
+                                duration={TEST_MODE_DURATION_SECONDS}
+                                onExpire={handleTimerExpire}
+                            />
+                        )}
+                        <Tag variant={exercise.difficulty === 'easy' ? 'success' : exercise.difficulty === 'hard' ? 'error' : 'warning'}>
+                            {exercise.difficulty === 'easy' ? 'Easy' : exercise.difficulty === 'hard' ? 'Hard' : 'Medium'}
+                        </Tag>
+                    </div>
                 </div>
                 <ProgressBar value={progress} />
             </div>
