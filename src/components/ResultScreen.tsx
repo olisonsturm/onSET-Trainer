@@ -61,29 +61,41 @@ export function ResultScreen() {
         navigate('/');
     };
 
-    const getGrade = (percent: number): { label: string; color: string } => {
-        if (percent >= 90) return { label: 'Excellent!', color: 'text-success-600' };
-        if (percent >= 75) return { label: 'Well done!', color: 'text-primary-600' };
-        if (percent >= 60) return { label: 'Not bad', color: 'text-yellow-600' };
-        return { label: 'Keep practicing!', color: 'text-error-600' };
+    const getGrade = (percent: number): { label: string; color: string; level: string; levelColor: string } => {
+        if (percent >= 75) return { label: 'Excellent!', color: 'text-success-600', level: 'C1', levelColor: 'bg-success-100 text-success-700' };
+        if (percent >= 60) return { label: 'Well done!', color: 'text-primary-600', level: 'B2+', levelColor: 'bg-primary-100 text-primary-700' };
+        if (percent >= 50) return { label: 'Good effort', color: 'text-yellow-600', level: 'B2', levelColor: 'bg-yellow-100 text-yellow-700' };
+        return { label: 'Keep practicing!', color: 'text-error-600', level: 'Below B2', levelColor: 'bg-error-100 text-error-700' };
     };
 
     const grade = getGrade(percentage);
+
+    // Check if this was a test mode session
+    const isTestMode = session?.mode === 'test' || recentAttempts.some(a => a.mode === 'test');
 
     return (
         <div className="max-w-2xl mx-auto">
             {/* Result Summary */}
             <Card className="text-center mb-6">
                 <div className="py-8">
+                    {/* GER Level Badge - only show for test mode */}
+                    {isTestMode && (
+                        <div className="mb-4">
+                            <span className={`inline-block px-4 py-2 rounded-full text-lg font-bold ${grade.levelColor}`}>
+                                GER Level: {grade.level}
+                            </span>
+                        </div>
+                    )}
+
                     <div className={`text-6xl font-bold mb-2 ${grade.color}`}>
-                        {percentage}%
+                        {correctGaps}/{totalGaps}
+                    </div>
+                    <div className="text-2xl text-gray-500 mb-2">
+                        Points ({percentage}%)
                     </div>
                     <h2 className={`text-2xl font-semibold mb-4 ${grade.color}`}>
                         {grade.label}
                     </h2>
-                    <p className="text-gray-600 mb-6">
-                        {correctGaps} of {totalGaps} gaps filled correctly
-                    </p>
 
                     <ProgressBar
                         value={percentage}
@@ -91,6 +103,17 @@ export function ResultScreen() {
                         size="lg"
                         color={percentage >= 75 ? 'success' : percentage >= 50 ? 'warning' : 'error'}
                     />
+
+                    {/* Level thresholds info for test mode */}
+                    {isTestMode && (
+                        <div className="mt-4 text-sm text-gray-500">
+                            <span className="inline-flex gap-4">
+                                <span>C1: ≥75%</span>
+                                <span>B2+: ≥60%</span>
+                                <span>B2: ≥50%</span>
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="border-t border-gray-100 pt-6 flex flex-wrap justify-center gap-3">
