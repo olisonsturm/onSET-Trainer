@@ -7,7 +7,7 @@ export function ResultScreen() {
     const navigate = useNavigate();
     const { setId } = useParams<{ setId: string }>();
     const { state, dispatch, getExercisesForSet } = useApp();
-    const { session, attempts, exerciseSets } = state;
+    const { session, attempts } = state;
 
     // Find exercises for the set
     const exercises = getExercisesForSet(setId || '');
@@ -126,7 +126,7 @@ export function ResultScreen() {
                                 <div className="space-y-3">
                                     <div className="flex items-center gap-2">
                                         <Tag variant="error" size="sm">
-                                            {String(attempt.correctAnswers.filter(c => c).length)}/{String(attempt.correctAnswers.length)} correct
+                                            {`${attempt.correctAnswers.filter(c => c).length}/${attempt.correctAnswers.length} correct`}
                                         </Tag>
                                     </div>
 
